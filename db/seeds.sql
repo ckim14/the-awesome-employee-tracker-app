@@ -1,13 +1,13 @@
-INSERT INTO departments (name, description)
+INSERT INTO departments (name)
 VALUES
-  ('Finance', 'keeps track of expenses'),
+  ('Finance');
   
 
 INSERT INTO roles (title, salary)
 VALUES
-  ('Accountant 1', 140000.00),
+  ('Accountant1', 140000.00);
 
 
   INSERT INTO employees (first_name, last_name)
 VALUES
-  ('James', 'Fraser', ),
+  ('James', 'Fraser', );

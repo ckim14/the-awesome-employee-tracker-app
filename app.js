@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const database = require("./db/connection");
 const fs = require("fs");
 
 const promptUser = () => {
@@ -39,3 +40,9 @@ const promptUser = () => {
       }
     });
 };
+
+const viewDepts = () => {};
+
+const viewRoles = () => {};
+
+const viewEmployees = () => {};

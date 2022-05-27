@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const database = require("./db/connection");
+const express = require("express");
 const fs = require("fs");
 
 const promptUser = () => {

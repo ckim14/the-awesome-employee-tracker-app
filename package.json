@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "watch": "nodemon server.js"
+  },
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^8.2.4",

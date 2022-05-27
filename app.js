@@ -47,3 +47,103 @@ const viewDepts = () => {};
 const viewRoles = () => {};
 
 const viewEmployees = () => {};
+
+const addDept = () => {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "What is the name of the department? (required)",
+        validate: (departmentInput) => {
+          if (departmentInput) {
+            return true;
+          } else {
+            console.log("Please enter the name of the department.");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+      departments.push({ answers });
+      addToDept();
+    });
+};
+
+const addRole = () => {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "role",
+        message: "What is the title of the role you wish to add? (required)",
+        validate: (roleInput) => {
+          if (roleInput) {
+            return true;
+          } else {
+            console.log("Please enter the title of the role.");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salalry for the role? (required)",
+        validate: (salaryInput) => {
+          if (salaryInput) {
+            return true;
+          } else {
+            console.log("Please enter the salary for the role.");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+      departments.push({ answers });
+      addToRole();
+    });
+};
+
+const addEmployee = () => {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message:
+          "What is the first name of the employee you wish to add? (required)",
+        validate: (firstNameInput) => {
+          if (firstNameInput) {
+            return true;
+          } else {
+            console.log("Please enter the first name of the employee.");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message:
+          "What is the last name of the employee you wish to add? (required)",
+        validate: (lastNameInput) => {
+          if (lastNameInput) {
+            return true;
+          } else {
+            console.log("Please enter the last name of the employee.");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+      employee.push({ answers });
+      addToEmployee();
+    });
+};

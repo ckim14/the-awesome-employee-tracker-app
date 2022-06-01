@@ -66,9 +66,9 @@ router.post("/roles", ({ body }, res) => {
     return;
   }
 
-  const sql = `INSERT INTO roles (title, salary)
+  const sql = `INSERT INTO roles (title, salary, department)
     VALUES (?, ?)`;
-  const params = [body.title, body.salary];
+  const params = [body.title, body.salary, body.department];
 
   db.query(sql, params, (err, result) => {
     if (err) {

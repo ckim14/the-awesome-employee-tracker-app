@@ -1,7 +1,9 @@
 const inquirer = require("inquirer");
-const database = require("./db/connection");
+const db = require("./db/connection");
 const express = require("express");
 const fs = require("fs");
+const { json } = require("express");
+// const Connection = require("mysql2/typings/mysql/lib/Connection");
 
 const promptUser = () => {
   return inquirer
@@ -10,6 +12,7 @@ const promptUser = () => {
         type: "list",
         name: "action",
         message: "What would you like to do?",
+        validate: (input) => (!input ? "You must make a selection" : true),
         choices: [
           "view all departments",
           "view all roles",
@@ -21,32 +24,48 @@ const promptUser = () => {
         ],
       },
     ])
-    .then((response) => {
-      if (response.add == "view all departments") {
+    .then(async (response) => {
+      console.clear();
+      if (response.action == "view all departments") {
         viewDepts();
-      } else if (response.add === "view all roles") {
+      } else if (response.action === "view all roles") {
         viewRoles();
-      } else if (response.add === "view all employees") {
+      } else if (response.action === "view all employees") {
         viewEmployees();
-      } else if (response.add === "add a department") {
-        addDept();
-      } else if (response.add === "add a role") {
-        addRole();
-      } else if (response.add === "add an employee") {
-        addEmployee();
-      } else if (response.add === "update an employee") {
-        updateEmployee();
+      } else if (response.action === "add a department") {
+        await addDept();
+      } else if (response.action === "add a role") {
+        await addRole();
+      } else if (response.action === "add an employee") {
+        await addEmployee();
+      } else if (response.action === "update an employee") {
+        await updateEmployee();
       } else {
-        prompt("You must make a selection.");
+        console.log(
+          "Unknown response given: " + JSON.stringify(response, undefined, 4)
+        );
       }
-    });
+    })
+    .finally(promptUser);
 };
 
-const viewDepts = () => {};
+const viewDepts = () => {
+  db.query("SELECT * FROM departments;", (err, results) => {
+    console.table(results);
+  });
+};
 
-const viewRoles = () => {};
+const viewRoles = () => {
+  db.query("SELECT * FROM roles;", (err, results) => {
+    console.table(results);
+  });
+};
 
-const viewEmployees = () => {};
+const viewEmployees = () => {
+  db.query("SELECT * FROM employees;", (err, results) => {
+    console.table(results);
+  });
+};
 
 const addDept = () => {
   return inquirer
@@ -67,8 +86,12 @@ const addDept = () => {
     ])
     .then((answers) => {
       console.log(answers);
-      departments.push({ answers });
-      addToDept();
+      db.query(
+        db.format(
+          "INSERT INTO departments (department_name) VALUES (?)",
+          answers.department
+        )
+      );
     });
 };
 
@@ -101,11 +124,29 @@ const addRole = () => {
           }
         },
       },
+      {
+        type: "input",
+        name: "department",
+        message: "What is the name of the department? (required)",
+        validate: (departmentInput) => {
+          if (departmentInput) {
+            console.log("The role was created");
+            return true;
+          } else {
+            console.log("Please enter the name of the department.");
+            return false;
+          }
+        },
+      },
     ])
     .then((answers) => {
       console.log(answers);
-      departments.push({ answers });
-      addToRole();
+      db.query(
+        db.format(
+          "INSERT INTO Departments (department_name) VALUES (?)",
+          answers.department
+        )
+      );
     });
 };
 
@@ -140,10 +181,38 @@ const addEmployee = () => {
           }
         },
       },
+      {
+        type: "input",
+        name: "role",
+        message: "What is the title of the role you wish to add? (required)",
+        validate: (roleInput) => {
+          if (roleInput) {
+            console.log("The role was created");
+            return true;
+          } else {
+            console.log("Please enter the title of the role.");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "role",
+        message: "What is the employee ID of their manager?",
+        validate: (roleInput) => {
+          if (roleInput) {
+            return true;
+          } else {
+            console.log("Please enter the employee ID of the manager.");
+            return false;
+          }
+        },
+      },
     ])
     .then((answers) => {
       console.log(answers);
       employee.push({ answers });
-      addToEmployee();
     });
 };
+
+promptUser();

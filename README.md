@@ -6,7 +6,7 @@ This application allows business owners to be able to view and manage their depa
 
 
 ## Deployed Application Video
-
+https://watch.screencastify.com/v/FZnlhQJCMU0ym3USseCN
 
 ## Installation:
 

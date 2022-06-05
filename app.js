@@ -238,6 +238,50 @@ const addEmployee = () => {
     });
 };
 
+//update
+const updateEmployeeRole = () => {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "id",
+        message:
+          "What is the employee ID of the employee you wish to update? (required)",
+        validate: (idInput) => {
+          if (idInput) {
+            return true;
+          } else {
+            console.log("Please enter the employee ID number.");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "role_id",
+        message:
+          "What is the role ID number of the employee's new role? (required)",
+        validate: (role_idInput) => {
+          if (role_idInput) {
+            return true;
+          } else {
+            console.log("Please enter the role ID number.");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+
+      const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+      const params = [answers.role_id, answers.id];
+      console.log("got here");
+
+      db.query(sql, params);
+    });
+};
+
 //delete
 const deleteDept = () => {
   return inquirer
@@ -324,66 +368,6 @@ const deleteEmployee = () => {
       db.query(sql, params, (err, result) => {
         if (err) {
           console.error("error deleting employee: ", err.message);
-        }
-      });
-    });
-};
-
-//update
-const updateEmployeeRole = () => {
-  return inquirer
-    .prompt([
-      {
-        type: "number",
-        name: "id",
-        message:
-          "What is the employee ID of the employee you wish to update? (required)",
-        validate: (idInput) => {
-          if (idInput) {
-            return true;
-          } else {
-            console.log("Please enter the employee ID number.");
-            return false;
-          }
-        },
-      },
-      {
-        type: "number",
-        name: "role_id",
-        message:
-          "What is the role ID number of the employee's new role? (required)",
-        validate: (role_idInput) => {
-          if (role_idInput) {
-            return true;
-          } else {
-            console.log("Please enter the role ID number.");
-            return false;
-          }
-        },
-      },
-    ])
-    .then((answers) => {
-      console.log(answers);
-
-      const sql = `
-      UPDATE employees 
-      SET role_id = ? 
-      WHERE id = ?`;
-      const params = [req.answers.id, req.answers.role_id, req.params.id];
-
-      db.query(sql, params, (err, result) => {
-        if (err) {
-          res.status(400).json({ error: err.message });
-        } else if (!result.affectedRows) {
-          res.json({
-            message: "Role ID not found",
-          });
-        } else {
-          res.json({
-            message: "success",
-            data: req.body,
-            changes: result.affectedRows,
-          });
         }
       });
     });
